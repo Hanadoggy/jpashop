@@ -1,13 +1,11 @@
 package dbwls.jpashop.service;
 
-import dbwls.jpashop.domain.Delivery;
-import dbwls.jpashop.domain.Member;
-import dbwls.jpashop.domain.Order;
-import dbwls.jpashop.domain.OrderItem;
+import dbwls.jpashop.domain.*;
 import dbwls.jpashop.domain.item.Item;
 import dbwls.jpashop.repository.ItemRepository;
 import dbwls.jpashop.repository.MemberRepository;
 import dbwls.jpashop.repository.OrderRepository;
+import dbwls.jpashop.repository.OrderSearch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +22,7 @@ public class OrderService {
     private final ItemRepository itemRepository;
 
     // 주문
+    @Transactional
     public Long order(Long memberId, Long itemId, int count) {
 
         // 엔티티 조회
@@ -33,6 +32,7 @@ public class OrderService {
         // 배송정보 생성
         Delivery delivery = new Delivery();
         delivery.setAddress(member.getAddress());
+        delivery.setStatus(DeliveryStatus.READY);
 
         // 주문상품 생성
         OrderItem orderItem = OrderItem.createOrderItem(item, item.getPrice(), count);
@@ -53,8 +53,8 @@ public class OrderService {
         order.cancel();
     }
 
-    // 검색
-//    public List<Order> findOrder(OrderSearch orderSearch) {
-//        return orderRepository
-//    }
+    //검색
+    public List<Order> findOrders(OrderSearch orderSearch) {
+        return orderRepository.findAllByCriteria(orderSearch);
+    }
 }

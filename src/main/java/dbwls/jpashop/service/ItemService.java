@@ -1,5 +1,6 @@
 package dbwls.jpashop.service;
 
+import dbwls.jpashop.domain.item.Book;
 import dbwls.jpashop.domain.item.Item;
 import dbwls.jpashop.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,17 @@ public class ItemService {
     @Transactional
     public void saveItem(Item item) {
         itemRepository.save(item);
+    }
+
+    @Transactional
+    public void updateItem(Long itemId, String name, int price, int stockQuantity) {
+
+        // 변경 감지에 의한 데이터 변경
+        Item findItem = itemRepository.findOne(itemId);
+        findItem.setPrice(price);
+        findItem.setName(name);
+        findItem.setStockQuantity(stockQuantity);
+
     }
 
     public List<Item> findItems() {
